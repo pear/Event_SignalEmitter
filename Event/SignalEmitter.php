@@ -1,23 +1,40 @@
 <?php
 /**
-*   Generic signal emitting class with the same
-*   API as GObject.
+* Simple event handling package
 *
-*   Since GObject doesn't allow classes to define
-*   or emit own signals, this class provides a PHP
-*   implementation with the same API.
+* PHP Version 5
 *
-*   Let your own class extend this one, and you have
-*   the following methods available:
-*   - connect
-*   - connect_simple
-*   - disconnect
-*   - block
-*   - unblock
-*   - emit
-*   - register_signal
+* @category Event
+* @package  Event_SignalEmitter
+* @author   Christian Weiske <cweiske@php.net>
+* @license  http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+* @version  CVS: $Id$
+* @link     http://pear.php.net/package/Event_SignalEmitter
+*/
+
+/**
+* Generic signal emitting class with the same
+* API as GObject.
 *
-*   @author Christian Weiske <cweiske@php.net>
+* Since GObject doesn't allow classes to define
+* or emit own signals, this class provides a PHP
+* implementation with the same API.
+*
+* Let your own class extend this one, and you have
+* the following methods available:
+* - connect
+* - connect_simple
+* - disconnect
+* - block
+* - unblock
+* - emit
+* - register_signal
+*
+* @category Event
+* @package  Event_SignalEmitter
+* @author   Christian Weiske <cweiske@php.net>
+* @license  http://www.gnu.org/copyleft/lesser.html  LGPL License 2.1
+* @link     http://pear.php.net/package/Event_SignalEmitter
 */
 class Event_SignalEmitter
 {
@@ -26,14 +43,13 @@ class Event_SignalEmitter
     protected $nNextHandlerNumber   = 1;
 
     /**
-    *   Add a listener. Callbacks get the listener object as first parameter.
-    *   Also accepts user data as parameter.
+    * Add a listener. Callbacks get the listener object as first parameter.
+    * Also accepts user data as parameter.
     *
+    * @param string   $strSignal Signal name (e.g. "go")
+    * @param callback $callback  Function/Method that should be called
     *
-    *   @param string $strSignal    Signal name (e.g. "go")
-    *   @param callback $callback   Function/Method that should be called
-    *
-    *   @return int     Signal handler id
+    * @return int Signal handler id
     */
     public function connect($strSignal, $callback)
     {
@@ -45,20 +61,21 @@ class Event_SignalEmitter
         } else {
             $arUserData = array();
         }
-        return $this->connectImplementation($strSignal, $callback, false, $arUserData);
+        return $this->connectImplementation(
+            $strSignal, $callback, false, $arUserData
+        );
     }//public function connect($strSignal, $callback)
 
 
 
     /**
-    *   Add a simple listener. Callbacks do not get the emitter object.
-    *   Also accepts user data as parameter.
+    * Add a simple listener. Callbacks do not get the emitter object.
+    * Also accepts user data as parameter.
     *
+    * @param string   $strSignal Signal name (e.g. "go")
+    * @param callback $callback  Function/Method that should be called
     *
-    *   @param string $strSignal    Signal name (e.g. "go")
-    *   @param callback $callback   Function/Method that should be called
-    *
-    *   @return int     Signal handler id
+    * @return int Signal handler id
     */
     public function connect_simple($strSignal, $callback)
     {
@@ -70,22 +87,25 @@ class Event_SignalEmitter
         } else {
             $arUserData = array();
         }
-        return $this->connectImplementation($strSignal, $callback, true, $arUserData);
+        return $this->connectImplementation(
+            $strSignal, $callback, true, $arUserData
+        );
     }//public function connect_simple($strSignal, $callback)
 
 
 
     /**
-    *   Internal implementation to add a listener.
+    * Internal implementation to add a listener.
     *
-    *   @param string $strSignal    Signal name (e.g. "go")
-    *   @param callback $callback   Function/Method that should be called
-    *   @param boolean  $bSimple    If it's a simple listener or not
-    *   @param array    $arUserData User defined data to pass to the callback
+    * @param string   $strSignal  Signal name (e.g. "go")
+    * @param callback $callback   Function/Method that should be called
+    * @param boolean  $bSimple    If it's a simple listener or not
+    * @param array    $arUserData User defined data to pass to the callback
     *
-    *   @return int     Signal handler id
+    * @return int Signal handler id
     */
-    protected function connectImplementation($strSignal, $callback, $bSimple, $arUserData)
+    protected function connectImplementation($strSignal, $callback, $bSimple,
+        $arUserData)
     {
         if (!isset($this->arListener[$strSignal])) {
             throw new Exception('Unknown signal "' . $strSignal . '"');
@@ -100,15 +120,16 @@ class Event_SignalEmitter
         );
 
         return $nHandlerId;
-    }//protected function connectImplementation($strSignal, $callback, $bSimple, $arUserData)
+    }//protected function connectImplementation($strSignal, $callback, ...)
 
 
 
     /**
-    *   Disconnects a signal handler.
+    * Disconnects a signal handler.
     *
-    *   @param int  $nHandlerId     ID returned by connect()
-    *   @return boolean     true if the handler has been found and disconnected
+    * @param int $nHandlerId ID returned by connect()
+    *
+    * @return boolean true if the handler has been found and disconnected
     */
     public function disconnect($nHandlerId)
     {
@@ -125,9 +146,11 @@ class Event_SignalEmitter
 
 
     /**
-    *   Blocks a signal handler
+    * Blocks a signal handler
     *
-    *   @param int  $nHandlerId     ID returned by connect()
+    * @param int $nHandlerId ID returned by connect()
+    *
+    * @return void
     */
     public function block($nHandlerId)
     {
@@ -137,9 +160,11 @@ class Event_SignalEmitter
 
 
     /**
-    *   Unblocks a signal handler
+    * Unblocks a signal handler
     *
-    *   @param int  $nHandlerId     ID returned by connect()
+    * @param int $nHandlerId ID returned by connect()
+    *
+    * @return void
     */
     public function unblock($nHandlerId)
     {
@@ -151,11 +176,13 @@ class Event_SignalEmitter
 
 
     /**
-    *   Emit a signal to all listeners
+    * Emit a signal to all listeners
     *
-    *   @param string $strSignal    Signal to emit (determines listener list)
-    *   @param array  $arParameter  Array of parameters to pass to the callback
-    *                               before the user defined params
+    * @param string $strSignal   Signal to emit (determines listener list)
+    * @param array  $arParameter Array of parameters to pass to the callback
+    *                             before the user defined params
+    *
+    * @return void
     */
     protected function emit($strSignal, $arParameter = array())
     {
@@ -169,21 +196,12 @@ class Event_SignalEmitter
 
         foreach ($this->arListener[$strSignal] as $nHandlerId => $arListener) {
             if (!isset($this->arBlocked[$nHandlerId])) {
-                $arParams = array_merge(
-                    $arParameter,
-                    $arListener['userdata']
-                );
+                $arParams = array_merge($arParameter, $arListener['userdata']);
                 if (!$arListener['simple']) {
-                    $arParams = array_merge(
-                        array($this),
-                        $arParams
-                    );
+                    $arParams = array_merge(array($this), $arParams);
                 }
 
-                call_user_func_array(
-                    $arListener['callback'],
-                    $arParams
-                );
+                call_user_func_array($arListener['callback'], $arParams);
             }
         }
     }//protected function emit($strSignal, $arParameter = array())
@@ -191,9 +209,11 @@ class Event_SignalEmitter
 
 
     /**
-    *   Registers a signal that can be emitted.
+    * Registers a signal that can be emitted.
     *
-    *   @param string $strSignal    Signal name
+    * @param string $strSignal Signal name
+    *
+    * @return void
     */
     public function register_signal($strSignal)
     {
@@ -211,7 +231,12 @@ class Event_SignalEmitter
 
 
     /**
-    *   @see connect_simple()
+    * Alias of @see connect_simple()
+    *
+    * @param string   $strSignal Signal name (e.g. "go")
+    * @param callback $callback  Function/Method that should be called
+    *
+    * @return int Signal handler id
     */
     public function connectSimple($strSignal, $callback)
     {
@@ -221,7 +246,11 @@ class Event_SignalEmitter
 
 
     /**
-    *   @see register_signal()
+    * Alias of @see register_signal()
+    *
+    * @param string $strSignal Signal name
+    *
+    * @return void
     */
     public function registerSignal($strSignal)
     {
