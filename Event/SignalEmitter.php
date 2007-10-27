@@ -231,12 +231,14 @@ class Event_SignalEmitter
 
 
     /**
-    * Alias of @see connect_simple()
+    * Alias of @link connect_simple()
     *
     * @param string   $strSignal Signal name (e.g. "go")
     * @param callback $callback  Function/Method that should be called
     *
     * @return int Signal handler id
+    *
+    * @see connect_simple()
     */
     public function connectSimple($strSignal, $callback)
     {
@@ -246,11 +248,13 @@ class Event_SignalEmitter
 
 
     /**
-    * Alias of @see register_signal()
+    * Alias of @link register_signal()
     *
     * @param string $strSignal Signal name
     *
     * @return void
+    *
+    * @see register_signal()
     */
     public function registerSignal($strSignal)
     {
