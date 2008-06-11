@@ -27,7 +27,7 @@ require_once 'Event/SignalEmitter.php';
 */
 class Event_SignalEmitter_Dispatcher extends Event_SignalEmitter
 {
-    protected static $instance = null;
+    protected static $arInstances = array();
 
 
 
@@ -45,14 +45,17 @@ class Event_SignalEmitter_Dispatcher extends Event_SignalEmitter
     * Returns the dispatcher instance.
     * This method makes sure only one instance exists.
     *
+    * @param string $strName Name of dispatcher instance
+    *
     * @return Event_SignalEmitter_Dispatcher Dispatcher object
     */
-    public static function singleton()
+    public static function singleton($strName = 'default')
     {
-        if (self::$instance === null) {
-            self::$instance = new Event_SignalEmitter_Dispatcher();
+        $strName = (string)$strName;
+        if (!array_key_exists($strName, self::$arInstances)) {
+            self::$arInstances[$strName] = new Event_SignalEmitter_Dispatcher();
         }
-        return self::$instance;
+        return self::$arInstances[$strName];
     }//public static function singleton()
 
 
