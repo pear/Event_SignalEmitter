@@ -61,18 +61,22 @@ class Event_SignalEmitter_Dispatcher extends Event_SignalEmitter
 
 
     /**
-    * Emit a signal to all listeners
+    * Emit a signal to all listeners.
+    * Takes any number of params.
     *
     * @param string $strSignal   Signal to emit (determines listener list)
-    * @param array  $arParameter Array of parameters to pass to the callback
-    *                             before the user defined params
+    * @param mixed  $param1      Parameter to pass to the receiving functions
+    * @param ...
     *
     * @return void
     */
-    public function emit($strSignal, $arParameter = array())
+    public function emit($strSignal)
     {
-        return parent::emit($strSignal, $arParameter);
-    }//public function emit($strSignal, $arParameter = array())
+        $params = func_get_args();
+        return call_user_func_array(
+            array('parent', 'emit'), $params
+        );
+    }//public function emit($strSignal)
 
 }//class Event_SignalEmitter_Dispatcher extends Event_SignalEmitter
 ?>

@@ -177,22 +177,21 @@ class Event_SignalEmitter
 
     /**
     * Emit a signal to all listeners
+    * Takes any number of params.
     *
     * @param string $strSignal   Signal to emit (determines listener list)
-    * @param array  $arParameter Array of parameters to pass to the callback
-    *                             before the user defined params
+    * @param mixed  $param1      Parameter to pass to the receiving functions
+    * @param ...
     *
     * @return void
     */
-    protected function emit($strSignal, $arParameter = array())
+    protected function emit($strSignal)
     {
         if (!isset($this->arListener[$strSignal])) {
             throw new Exception('Unknown signal "' . $strSignal . '"');
         }
-        if (!is_array($arParameter)) {
-            //catch dumb programmers that didn't read the api docs
-            $arParameter = array($arParameter);
-        }
+        $arParameter = func_get_args();
+        array_shift($arParameter);
 
         foreach ($this->arListener[$strSignal] as $nHandlerId => $arListener) {
             if (!isset($this->arBlocked[$nHandlerId])) {
@@ -204,7 +203,7 @@ class Event_SignalEmitter
                 call_user_func_array($arListener['callback'], $arParams);
             }
         }
-    }//protected function emit($strSignal, $arParameter = array())
+    }//protected function emit($strSignal)
 
 
 
