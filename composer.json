@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "Event_SignalEmitter": "./"
+            "Event": "./"
         }
     },
     "description": "More info available on: http://pear.php.net/package/Event_SignalEmitter",
