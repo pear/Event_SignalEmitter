@@ -1,0 +1,31 @@
+{
+    "authors": [
+        {
+            "email": "cweiske@php.net",
+            "name": "Christian Weiske",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Event_SignalEmitter": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/Event_SignalEmitter",
+    "include-path": [
+        "./"
+    ],
+    "license": "LGPL",
+    "name": "pear/event_signalemitter",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Event_SignalEmitter",
+        "source": "https://github.com/pear/Event_SignalEmitter"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
